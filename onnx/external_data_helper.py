@@ -176,6 +176,10 @@ def save_external_data(tensor: TensorProto, base_path: str) -> None:
     # Retrieve the tensor's data from raw_data or load external file
     if not tensor.HasField("raw_data"):
         raise ValueError("raw_data field doesn't exist.")
+    
+    if os.path.isfile(external_data_file_path):
+        #TODO: check size matches
+        return
 
     # Create file if it doesn't exist
     if not os.path.isfile(external_data_file_path):
