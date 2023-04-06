@@ -3,11 +3,14 @@ import os
 import re
 import sys
 import uuid
+from nanoid import generate
 from itertools import chain
 from typing import Callable, Iterable, Optional
 
 from onnx.onnx_pb import AttributeProto, GraphProto, ModelProto, TensorProto
 
+#Nanoid alpha
+ALPHABET="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 class ExternalDataInfo:
     def __init__(self, tensor: TensorProto) -> None:
@@ -124,7 +127,7 @@ def convert_model_to_external_data(
         tensors = _get_all_tensors(model)
 
     if all_tensors_to_one_file:
-        file_name = str(uuid.uuid1())
+        file_name = str(generate(ALPHABET, 6))
         if location:
             file_name = location
         for tensor in tensors:
@@ -141,7 +144,7 @@ def convert_model_to_external_data(
             ):
                 tensor_location = tensor.name
                 if not _is_valid_filename(tensor_location):
-                    tensor_location = str(uuid.uuid1())
+                    tensor_location = str(generate(ALPHABET, 6)) 
                 set_external_data(tensor, tensor_location)
 
 
