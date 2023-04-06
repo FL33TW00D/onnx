@@ -1,3 +1,5 @@
+# Copyright (c) ONNX Project Contributors
+#
 # SPDX-License-Identifier: Apache-2.0
 
 # isort:skip_file
@@ -59,6 +61,7 @@ from onnx import (
     printer,
     shape_inference,
     utils,
+    version_converter,
 )
 
 
