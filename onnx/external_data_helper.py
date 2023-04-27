@@ -2,7 +2,6 @@
 import os
 import re
 import sys
-import uuid
 from nanoid import generate
 from itertools import chain
 from typing import Callable, Iterable, Optional
