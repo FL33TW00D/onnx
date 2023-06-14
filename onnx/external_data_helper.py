@@ -4,14 +4,11 @@
 import os
 import re
 import sys
-from nanoid import generate
+import uuid
 from itertools import chain
 from typing import Callable, Iterable, Optional
 
 from onnx.onnx_pb import AttributeProto, GraphProto, ModelProto, TensorProto
-
-#Nanoid alpha
-ALPHABET="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 class ExternalDataInfo:
     def __init__(self, tensor: TensorProto) -> None:
@@ -128,7 +125,7 @@ def convert_model_to_external_data(
         tensors = _get_all_tensors(model)
 
     if all_tensors_to_one_file:
-        file_name = str(generate(ALPHABET, 6))
+        file_name = str(uuid.uuid1())
         if location:
             file_name = location
         for tensor in tensors:
@@ -143,9 +140,7 @@ def convert_model_to_external_data(
                 tensor.HasField("raw_data")
                 and sys.getsizeof(tensor.raw_data) >= size_threshold
             ):
-                tensor_location = tensor.name
-                if not _is_valid_filename(tensor_location):
-                    tensor_location = str(generate(ALPHABET, 6)) 
+                tensor_location = str(uuid.uuid1())
                 set_external_data(tensor, tensor_location)
 
 
@@ -180,7 +175,7 @@ def save_external_data(tensor: TensorProto, base_path: str) -> None:
     # Retrieve the tensor's data from raw_data or load external file
     if not tensor.HasField("raw_data"):
         raise ValueError("raw_data field doesn't exist.")
-    
+
     if os.path.isfile(external_data_file_path):
         #TODO: check size matches
         return
